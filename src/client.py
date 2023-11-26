@@ -42,6 +42,7 @@ server_address = ('localhost', 8080)
 # Hilos de recepción y envío
 threading_receive = threading.Thread(target=receive, args=(client_socket, server_address), daemon=True)
 threading_send = threading.Thread(target=send, args=(client_socket, server_address))
+# Inicia hilos
 threading_receive.start()
 threading_send.start()
 threading_send.join()

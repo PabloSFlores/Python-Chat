@@ -22,18 +22,20 @@ def broadcast(message, omit_address):
 while True:
     # Manejo de excepciones
     try:
-        # Obtener la información de los usuarios descomponiendo el la respuesta de recvfrom
+        # Obtener la información de los usuarios descomponiendo la respuesta de recvfrom
         data, address = server_socket.recvfrom(1024)
 
         # Agregar usuario si es nuevo
         if not address in users:
             users[address] = data.decode("utf-8")
+            # Crear mensaje de entrada y enviarlo a todos, menos al usuario que accedió
             enter_message = f"[{datetime.now().strftime('%d/%m/%Y %H:%M:%S')}] {users[address]} entró al chat."
             broadcast(enter_message, address)
             continue
 
         # Eliminar al usuario del diccionario si decide salir
         if "SALIR" in data.decode("utf-8"):
+            # Crear mensaje de salida y enviarlo a todos, menos al usuario que salió
             leave_message = f"[{datetime.now().strftime('%d/%m/%Y %H:%M:%S')}] {users[address]} salió del chat."
             users.pop(address)
             broadcast(leave_message, address)
