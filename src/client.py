@@ -21,14 +21,16 @@ def receive(socket, address):
     # Envia el nombre de usuario para agregarse a la lista de usuarios
     socket.sendto(username.encode('utf-8'), address)
     # Siempre está escuchando por nuevos mensajes
-    while True:
+    while threading_send.is_alive():
         data = socket.recv(1024).decode('utf-8')
-        print(data)
-        # Si el mensaje tiene contenido, lo descifra con la clave ingresada
-        if len(data.split(':')) > 3:
-            ciphered_message = data.split(':')[3]
-            deciphered_message = fun.cesar_decipher(ciphered_message, receive_key)
-            print(f"Mensaje descifrado: {deciphered_message}")
+        # Validar que no sea un mensaje que envíe yo
+        if username not in data:
+            print(data)
+            # Si el mensaje tiene contenido, lo descifra con la clave ingresada
+            if len(data.split(':')) > 3:
+                ciphered_message = data.split(':')[3]
+                deciphered_message = fun.cesar_decipher(ciphered_message, receive_key)
+                print(f"Mensaje descifrado: {deciphered_message}")
 
 print('- - CHAT | CESAR - -\n' + 'SALIR) Salir del chat')
 # Obtener nombre de usuario, llave de envío y llave de recepción

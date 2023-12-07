@@ -12,11 +12,10 @@ users = {}
 
 # Función que reenvia el mensaje a todas las direcciones de los usuarios menos al que envió el mensaje
 # Imprime el mensaje y lo reenvia
-def broadcast(message, omit_address):
+def broadcast(message):
     print(message)
     for address in users:
-        if not omit_address == address:
-            server_socket.sendto(message.encode(), address)
+        server_socket.sendto(message.encode(), address)
 
 # Servidor siempre escuchando
 while True:
@@ -30,7 +29,7 @@ while True:
             users[address] = data.decode("utf-8")
             # Crear mensaje de entrada y enviarlo a todos, menos al usuario que accedió
             enter_message = f"[{datetime.now().strftime('%d/%m/%Y %H:%M:%S')}] {users[address]} entró al chat."
-            broadcast(enter_message, address)
+            broadcast(enter_message)
             continue
 
         # Eliminar al usuario del diccionario si decide salir
@@ -38,11 +37,11 @@ while True:
             # Crear mensaje de salida y enviarlo a todos, menos al usuario que salió
             leave_message = f"[{datetime.now().strftime('%d/%m/%Y %H:%M:%S')}] {users[address]} salió del chat."
             users.pop(address)
-            broadcast(leave_message, address)
+            broadcast(leave_message)
         
         # Mensaje normal
         else:
             message = f"[{datetime.now().strftime('%d/%m/%Y %H:%M:%S')}] {data.decode()}"
-            broadcast(message, address)
+            broadcast(message)
     except ConnectionResetError:
         print("Error")
