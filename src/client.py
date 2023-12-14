@@ -13,7 +13,7 @@ def send(socket, address):
             socket.sendto(message.encode('utf-8'), address)
             break
         # En otro caso, envía el mensaje cifrado
-        ciphered_message = f"{username}: {fun.cesar_cipher(message, send_key)}"
+        ciphered_message = f"{username}: {fun.cesar_cipher(message, key)}"
         socket.sendto(ciphered_message.encode('utf-8'), address)
 
 # Función para recibir mensajes
@@ -28,14 +28,13 @@ def receive(socket, address):
         # Si el mensaje tiene contenido, lo descifra con la clave ingresada
         if len(data.split(':')) > 3:
             ciphered_message = data.split(':')[3]
-            deciphered_message = fun.cesar_decipher(ciphered_message, receive_key)
+            deciphered_message = fun.cesar_decipher(ciphered_message, key)
             print(f"Mensaje descifrado: {deciphered_message}")
 
 print('- - CHAT | CESAR - -\n' + 'SALIR) Salir del chat')
 # Obtener nombre de usuario, llave de envío y llave de recepción
 username = input('Ingresa tu nombre de usuario: ')
-send_key = int(input('Ingresa tu llave de cifrado para enviar: '))
-receive_key = int(input('Ingresa tu llave de cifrado para recibir: '))
+key = int(input('Ingresa la llave de cifrado: '))
 # Crear socket
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 # Dirección del servidor localhost:8080
